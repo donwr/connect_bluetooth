@@ -62,6 +62,40 @@ You can then connect to the new device using:
 
 connect_bluetooth NEW_DEVICE
 
+Create a shell script named disconnect_bluetooth.sh with the following content:
+
+#!/bin/bash
+
+DEVICE_VAR=$1
+
+if [ -z "$DEVICE_VAR" ]; then
+  echo "Usage: disconnect_bluetooth <DEVICE_VARIABLE_NAME>"
+  echo "Available device variables: HEADPHONES, SPEAKER, MOUSE"
+  exit 1
+fi
+
+MAC_ADDRESS=${!DEVICE_VAR}
+
+if [ -z "$MAC_ADDRESS" ]; then
+  echo "No MAC address found for $DEVICE_VAR"
+  exit 1
+fi
+
+echo -e "disconnect $MAC_ADDRESS\nexit" | bluetoothctl
+Make the script executable:
+
+chmod +x disconnect_bluetooth.sh
+
+Move the script to a directory that is included in your PATH, for example, /usr/local/bin:
+
+sudo mv disconnect_bluetooth.sh /usr/local/bin/disconnect_bluetooth
+
+To disconnect from a Bluetooth device, use the disconnect_bluetooth command followed by the name of the environment variable you defined:
+
+disconnect_bluetooth HEADPHONES
+disconnect_bluetooth SPEAKER
+disconnect_bluetooth MOUSE
+
 Troubleshooting
 Ensure that Bluetooth is enabled on your device.
 Make sure the MAC address is correctly specified in the environment variable.
